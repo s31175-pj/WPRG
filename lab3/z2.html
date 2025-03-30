@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Formularz Rezerwacji Hotelu</title>
+
+</head>
+<body>
+    <h1>Formularz Rezerwacji Hotelu</h1>
+    <form method="post" action="z2.php">
+        <label for="liczba_osob">Liczba osób (1-4):</label><br>
+        <select id="liczba_osob" name="liczba_osob">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+        </select><br><br>
+
+        <label for="imie">Imię*:</label><br>
+        <input type="text" id="imie" name="imie" required><br><br>
+
+        <label for="nazwisko">Nazwisko*:</label><br>
+        <input type="text" id="nazwisko" name="nazwisko" required><br><br>
+
+        <label for="adres">Adres*:</label><br>
+        <textarea id="adres" name="adres" required></textarea><br><br>
+
+        <label for="karta_kredytowa">Numer karty kredytowej*:</label><br>
+        <input type="text" id="karta_kredytowa" name="karta_kredytowa" required><br><br>
+
+        <label for="email">E-mail*:</label><br>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="data_pobytu">Data pobytu*:</label><br>
+        <input type="date" id="data_pobytu" name="data_pobytu" required><br><br>
+
+        <label for="godzina_przyjazdu">Godzina przyjazdu:</label><br>
+        <input type="time" id="godzina_przyjazdu" name="godzina_przyjazdu"><br><br>
+
+        <label for="lozko_dziecko">Łóżko dla dziecka:</label><br>
+        <input type="checkbox" id="lozko_dziecko" name="lozko_dziecko"><br><br>
+
+        <label for="udogodnienia">Udogodnienia:</label><br>
+        <select id="udogodnienia" name="udogodnienia[]" multiple>
+            <option value="klimatyzacja">Klimatyzacja</option>
+            <option value="popielniczka">Popielniczka dla palących</option>
+            <option value="wifi">Wi-Fi</option>
+            <option value="parking">Parking</option>
+        </select><br><br>
+
+        <input type="submit" value="Rezerwuj">
+    </form>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Prosty Kalkulator</title>
+</head>
+<body>
+    <h1>Prosty Kalkulator</h1>
+    <form method="post" action="z1.php"> 
+        <label for="liczba1">Liczba 1:</label><br>
+        <input type="number" id="liczba1" name="liczba1"><br><br>
+
+        <label for="liczba2">Liczba 2:</label><br>
+        <input type="number" id="liczba2" name="liczba2"><br><br>
+
+        <label for="operacja">Wybierz operację:</label><br>
+        <select id="operacja" name="operacja">
+            <option value="dodawanie">Dodawanie</option>
+            <option value="odejmowanie">Odejmowanie</option>
+            <option value="mnozenie">Mnożenie</option>
+            <option value="dzielenie">Dzielenie</option>
+        </select><br><br>
+
+        <input type="submit" value="Oblicz">
+    </form>
+</body>
+</html>
