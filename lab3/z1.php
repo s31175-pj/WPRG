@@ -7,6 +7,8 @@
 
 Wynik: 
 <?php
+    include "./z1func.php";
+
     if (isset($_POST["operacja"])) {
         $liczba1 = $_POST["liczba1"];
         $liczba2 = $_POST["liczba2"];
@@ -14,25 +16,20 @@ Wynik:
 
         switch ($operacja) {
             case "dodawanie":
-                $wynik = $liczba1 + $liczba2;
+                add($liczba1, $liczba2);
                 break;
             case "odejmowanie":
-                $wynik = $liczba1 - $liczba2;
+                sub($liczba1, $liczba2);
                 break;
             case "mnozenie":
-                $wynik = $liczba1 * $liczba2;
+                mul($liczba1, $liczba2);
                 break;
             case "dzielenie":
-                if ($liczba2 != 0) {
-                    $wynik = $liczba1 / $liczba2;
-                } else {
-                    $wynik = "Nie można dzielić przez zero.";
-                }
+                div($liczba1, $liczba2);
                 break;
             default:
-                $wynik = "Nieznana operacja.";
+                echo "Nieznana operacja.";
         }
-        echo "Wynik: " . $wynik;
     } else {
         echo "Brak danych do obliczeń.";
     }
