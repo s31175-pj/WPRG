@@ -4,27 +4,42 @@
 
     if (session_status()==2) redirect('index.php');
 
+    $conn = new mysqli("localhost", "root", "", "shroomforum");
+
     if (isset($_POST["login"]))
     {
+
         $login = $_POST["login"];
         $pass = $_POST["pass"];
 
-        $query = "SELECT * FROM users WHERE username = $login OR email = $login";
-
-        $result = connect_db("localhost", "root", "", "shroomforum", $query);
         
-        $user = mysqli_fetch_row($result);
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+        }
 
-        if(!($user[1] == $login || $user[2] == $login && password_verify($user[3], $pass)))
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
+        $stmt->bind_param("ss", $login, $login);
+        
+        $stmt->execute();
+        $user = $stmt->get_result()->fetch_row();
+
+        if(!(($user[1] == $login || $user[2] == $login) && password_verify($pass, $user[3])))
         {
-            mysqli_close($db_lnk);
+            $conn->close();
             echo 'Niepoprawny login lub hasło';
         }
         else
         {
             session_start();
-            mysqli_close($db_lnk);
-            redirect('index.php');
+            $_SESSION["login"] = $login;
+            $_SESSION["login_true"] = true;
+            $conn->close();
+
+            echo '<form id="przekierowanie" method="post" action="index.php">';
+            echo '<input type="hidden" name="login_true" value="session_active">';
+            echo '</form>';
+            echo '<script>document.getElementById("przekierowanie").submit();</script>';
+            exit();
         }
     }
     else if (isset($_POST["username"]))
@@ -41,10 +56,10 @@
         }
         else
         {
-            $query = "INSERT INTO users (username, email, hashed_password)";
-            $query .= "VALUES ('$username', '$email', '$hashpass')";
-
-            connect_db("localhost", "root", "", "shroomforum", $query);
+            $stmt = $conn->prepare("INSERT INTO users (username, email, hashed_password) VALUES (?, ?, ?)");
+            $stmt->bind_param("sss", $username, $email, $hashpass);
+            
+            $stmt->execute();
         }
     }
 ?>

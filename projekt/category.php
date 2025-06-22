@@ -1,3 +1,8 @@
+<?php
+include 'php.php';
+include 'session_util.php';
+?>
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -11,11 +16,11 @@
     <header>
         <div class="header-content">
             <div class="logo">
-                <h1><a href="index.html">Forum Grzybiarzy</a></h1>
+                <h1><a href="index.php">Forum Grzybiarzy</a></h1>
             </div>
             <nav>
                 <ul>
-                    <li><a href="index.html">Strona Główna</a></li>
+                    <li><a href="index.php">Strona Główna</a></li>
                     <li><a href="#">Działy Forum</a></li>
                     <li><a href="#">Galerie Grzybów</a></li>
                     <li><a href="#">Wyszukiwarka</a></li>
@@ -23,78 +28,103 @@
                 </ul>
             </nav>
             <div class="user-status">
-                <span>Witaj, Gościu!</span>
-                <a href="auth.html">Zaloguj się</a>
-                <span>|</span>
-                <a href="auth.html">Zarejestruj się</a>
+                <?php
+                        if(session_status()!=2) {
+                            echo "<span>Witaj Gościu</span>";
+                            echo "<a href='auth.php'>Zaloguj się</a>";
+                            echo "<span>|</span>";
+                            echo "<a href='auth.php'>Zarejestruj się</a>";
+                        }
+                        else 
+                        {
+                            echo "<span>Witaj $user[1]</span>";
+                            echo "<a href='panel.php'>Mój Profil</a>";
+                            echo "<span>|</span>";
+                            echo "<a href='index.php?logout=true'>Wyloguj</a>";
+                        }
+                    ?>
             </div>
         </div>
     </header>
 
     <div class="container">
         <section class="category-header">
-            <h2>Kategoria: Identyfikacja Grzybów</h2>
-            <p>Tutaj znajdziesz wszystkie tematy dotyczące identyfikacji znalezionych grzybów. Zamieść zdjęcia, opisy i poproś społeczność o pomoc!</p>
+            <h2>Kategoria: <?php 
+                $stmt = $conn->prepare("SELECT * FROM sections WHERE id = ?");
+                $stmt->bind_param("i", $_GET['section']);
+                $stmt->execute();
+                $sections = $stmt->get_result()->fetch_row();
+                echo $sections[1];
+            ?></h2>
         </section>
 
+        
         <section class="topic-list">
-            <article class="topic-card">
-                <div class="topic-card-header">
-                    <h3><a href="#">Co to za grzyb? Zdjęcia z lasu (okolice Gdańska)</a></h3>
-                    <p class="topic-meta-full">
-                        <span>Autor: **GrzybowyNowicjusz**</span>
-                        <span>Data: 15.06.2025, 12:45</span>
-                        <span>Odpowiedzi: 8</span>
-                        <span>Wyświetlenia: 345</span>
-                    </p>
-                </div>
-                <p class="topic-excerpt">
-                    Znalazłem dzisiaj dziwny grzyb w lesie niedaleko Osowej. Kapelusz jasnobrązowy, od spodu blaszki białe. Trzon cienki, bez pierścienia, trochę włóknisty. Czy ktoś potrafi pomóc w identyfikacji? Załączam zdjęcia.
-                </p>
-                <div class="topic-card-footer">
-                    <span>Ostatni post: 15.06.2025, 14:30 przez **LeśnyWłóczęga**</span>
-                    <a href="#">Czytaj temat</a>
-                </div>
-            </article>
+            <?php
+                $stmt = $conn->prepare("SELECT * FROM topics WHERE section_id=?");
+                $stmt->bind_param("i", $sections[0]);
+                $stmt->execute();
+                $topics_size = $stmt->get_result()->num_rows;
 
-            <article class="topic-card">
-                <div class="topic-card-header">
-                    <h3><a href="#">Czy to Trufla? Znaleziono pod dębem!</a></h3>
-                    <p class="topic-meta-full">
-                        <span>Autor: **SzukaczSkrabow**</span>
-                        <span>Data: 14.06.2025, 09:00</span>
-                        <span>Odpowiedzi: 21</span>
-                        <span>Wyświetlenia: 987</span>
-                    </p>
-                </div>
-                <p class="topic-excerpt">
-                    Niesamowite znalezisko! Ktoś z Was widział coś podobnego? Ma intensywny zapach i rośnie pod korzeniami dębu. Czy to może być prawdziwa trufla? Jakie są cechy charakterystyczne?
-                </p>
-                <div class="topic-card-footer">
-                    <span>Ostatni post: 15.06.2025, 08:10 przez **GrzybowyEkspert**</span>
-                    <a href="#">Czytaj temat</a>
-                </div>
-            </article>
+                for($i = 0; $i<$topics_size; $i++)
+                {
+                    $stmt = $conn->prepare("SELECT * FROM topics WHERE section_id=?");
+                    $stmt->bind_param("i", $sections[0]);
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    for($j = 0; $j<=$i; $j++)
+                    {
+                        $topic = $result->fetch_row();
+                    }
 
-            <article class="topic-card">
-                <div class="topic-card-header">
-                    <h3><a href="#">Pytanie o Muchomora Czerwonego - czy da się pomylić?</a></h3>
-                    <p class="topic-meta-full">
-                        <span>Autor: **OstrożnyGrzybiarz**</span>
-                        <span>Data: 13.06.2025, 16:20</span>
-                        <span>Odpowiedzi: 12</span>
-                        <span>Wyświetlenia: 567</span>
-                    </p>
-                </div>
-                <p class="topic-excerpt">
-                    Często spotykam w lesie Muchomory Czerwone. Czy istnieją grzyby, z którymi łatwo można je pomylić, szczególnie w początkowej fazie wzrostu? Jakie są kluczowe różnice, na które zwrócić uwagę, aby uniknąć pomyłki?
-                </p>
-                <div class="topic-card-footer">
-                    <span>Ostatni post: 14.06.2025, 11:55 przez **FlorystaLeśny**</span>
-                    <a href="#">Czytaj temat</a>
-                </div>
-            </article>
+                    $stmt = $conn->prepare("SELECT * FROM users WHERE id=?");
+                    $stmt->bind_param("i", $topic[1]);
+                    $stmt->execute();
+                    $topic_user = $stmt->get_result()->fetch_row();
 
+                    $stmt = $conn->prepare("SELECT * FROM comments WHERE topic_id=?");
+                    $stmt->bind_param("i", $topic[0]);
+                    $stmt->execute();
+                    $comments_size = $stmt->get_result()->num_rows;
+
+                    if($comments_size>0)
+                    {
+
+                        $stmt = $conn->prepare("SELECT * FROM comments WHERE id=? ORDER BY date DESC");
+                        $stmt->bind_param("i", $topic[1]);
+                        $stmt->execute();
+                        $last_comments = $stmt->get_result()->fetch_row();
+                        $last_comment = $last_comments[4];
+
+                        $stmt = $conn->prepare("SELECT * FROM users WHERE id=?");
+                        $stmt->bind_param("i", $last_comments[1]);
+                        $stmt->execute();
+                        $comment_user = $stmt->get_result()->fetch_row();
+                    }
+                    else
+                    {
+                        $last_comment = $topic[3];
+                    }
+
+                    echo '<article class="topic-card">';
+                    echo    '<div class="topic-card-header">';
+                    echo        "<h3>$topic[4]</h3>";
+                    echo        '<p class="topic-meta-full">';
+                    echo            "<span>Autor: $topic_user[1]</span>";
+                    echo            "<span>Data: $topic[3]</span>";
+                    echo            "<span>Odpowiedzi: $comments_size</span>"; 
+                    echo        '</p>';
+                    echo    '</div>';
+                    echo    '<p class="topic-excerpt">';
+                    echo        "$topic[5]";
+                    echo    '</p>';
+                    echo    '<div class="topic-card-footer">';
+                    if($comments_size>0) echo "<span>Ostatni post: $last_comment przez $comment_user[1]</span>";
+                    echo        '<a href="topic.php?id='.$topic[0].'">Czytaj temat</a>';
+                    echo    '</div>';
+                    echo '</article>';
+                } 
+            ?>
             <div class="text-center" style="margin-top: 20px;">
                 <button class="btn" style="background-color: var(--accent-color); color: var(--text-color);">Pokaż więcej tematów</button>
             </div>

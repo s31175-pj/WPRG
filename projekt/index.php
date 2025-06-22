@@ -1,30 +1,8 @@
 <?php
 include 'php.php';
-
-if (isset($_GET['logout'])) {
-    session_destroy();
-}
-
-$query = "SELECT * FROM sections";
-$sections = connect_db("localhost", "root", "", "shroomforum", $query);
-
-$query = "SELECT COUNT(*) FROM sections";
-$sections_temp = connect_db("localhost", "root", "", "shroomforum", $query);
-$sections_row = mysqli_fetch_assoc($sections_temp);
-$sections_size = $sections_row['COUNT(*)'];
+include 'session_util.php';
 
 
-if(session_status()==2)
-{
-    $query = "SELECT * FROM users WHERE login = $login OR email = $login";
-    $result = connect_db("localhost", "root", "", "shroomforum", $query);
-    $user = mysqli_fetch_row($result);
-}
-
-
-
-
-    
 ?>
 
 <!DOCTYPE html>
@@ -44,8 +22,8 @@ if(session_status()==2)
             </div>
             <nav>
                 <ul>
-                    <li><a href="">Strona Główna</a></li>
-                    <li><a href="">Działy Forum</a></li>
+                    <li><a href="index.php">Strona Główna</a></li>
+                    <li><a href="index.php">Działy Forum</a></li>
                     <li><a href="">Galerie Grzybów</a></li>
                     <li><a href="">Wyszukiwarka</a></li>
                     <li><a href="">Kontakt</a></li>
@@ -74,27 +52,44 @@ if(session_status()==2)
     <div class="container">
         <section class="forum-sections">
             <?php
-            
+
+                $stmt = $conn->prepare("SELECT * FROM sections");
+                $stmt->execute();
+                $sections_size = $stmt->get_result()->num_rows;
+
                 for($i = 0; $i<$sections_size; $i++)
                 {
-                    $section = mysqli_fetch_row($sections);
+                    $stmt = $conn->prepare("SELECT * FROM sections");
+                    $stmt->execute();
+                    $result = $stmt->get_result();
+                    for($j = 0; $j<=$i; $j++)
+                    {
+                        $section = $result->fetch_row();
+                    }
 
-                    $query = "SELECT * FROM topics WHERE section_id=$section[0]";
-                    $topic = connect_db("localhost", "root", "", "shroomforum", $query);
+                    $stmt = $conn->prepare("SELECT * FROM topics WHERE section_id=?");
+                    $stmt->bind_param("i", $section[0]);
+                    $stmt->execute();
+                    $topic = $stmt->get_result()->fetch_row();
 
-                    $query = "SELECT * FROM users WHERE id=$topic[1]";
-                    $topic_user = connect_db("localhost", "root", "", "shroomforum", $query);
+                    $stmt = $conn->prepare("SELECT * FROM users WHERE id=?");
+                    $stmt->bind_param("i", $topic[1]);
+                    $stmt->execute();
+                    $topic_user = $stmt->get_result()->fetch_row();
 
-                    $query = "SELECT COUNT(*) FROM comments WHERE topic_id=$topic[0]";
-                    $comments_temp = connect_db("localhost", "root", "", "shroomforum", $query);
-                    $comments_row = mysqli_fetch_assoc($sections_temp);
-                    $comments_size = $comments_row['COUNT(*)'];
+                    $stmt = $conn->prepare("SELECT * FROM comments WHERE topic_id=?");
+                    $stmt->bind_param("i", $topic[0]);
+                    $stmt->execute();
+                    $comments_size = $stmt->get_result()->num_rows;
 
                     if($comments_size>0)
                     {
-                        $query = "SELECT * FROM comments WHERE id=$topic[1] ORDER BY date DESC";
-                        $last_comments = connect_db("localhost", "root", "", "shroomforum", $query);
-                        $last_comment = mysqli_fetch_row($last_comments)[4];
+
+                        $stmt = $conn->prepare("SELECT * FROM comments WHERE id=? ORDER BY date DESC");
+                        $stmt->bind_param("i", $topic[1]);
+                        $stmt->execute();
+                        $last_comments = $stmt->get_result()->fetch_row();
+                        $last_comment = $last_comments[4];
                     }
                     else
                     {
@@ -103,95 +98,23 @@ if(session_status()==2)
 
                     echo '<article class="section-card">';
                     echo    '<div class="section-header">';
-                    echo        "<h2><a href=''>$section[1]</a></h2>";
-                    echo        "<a href='category.php/?section='".$section[0].">Zobacz wszystkie</a>";
+                    echo        "<h2>$section[1]</h2>";
+                    echo        "<a href='category.php?section=".$section[0]."'>Zobacz wszystkie</a>";
                     echo    '</div>';
                     echo    '<div class="section-content">';
                     echo        '<div class="latest-topic">';
-                    echo            '<h3><a href="topic.php/?id='.$topic[0].'">'.$topic[1].'</a></h3>';
+                    echo            '<h3>'.$topic[4].'</h3>';
                     echo            "<p class='topic-meta'>Autor: $topic_user[1] | Data: $topic[3] | Komentarze: $comments_size</p>";
                     echo            "<p class='topic-excerpt'>$topic[5]</p>";
                     echo            '<div class="topic-footer">';
                     echo                "<span>Ostatni post: $last_comment</span>";
-                    echo                '<a href="topic.php/?id='.$topic[0].'">Przejdź do tematu</a>';
+                    echo                '<a href="topic.php?id='.$topic[0].'">Przejdź do tematu</a>';
                     echo            "</div>";
                     echo        '</div>';
                     echo    '</div>';
                     echo '</article>';
                 } 
             ?>
-            <article class="section-card">
-                <div class="section-header">
-                    <h2><a href="#">Identyfikacja Grzybów</a></h2>
-                    <a href="#">Zobacz wszystkie</a>
-                </div>
-                <div class="section-content">
-                    <div class="latest-topic">
-                        <h3><a href="#">Co to za grzyb? Zdjęcia z lasu</a></h3>
-                        <p class="topic-meta">Autor: GrzybowyNowicjusz | Data: 15.06.2025 | Komentarze: 8</p>
-                        <p class="topic-excerpt">Znalazłem dzisiaj dziwny grzyb. Kapelusz jasnobrązowy, od spodu blaszki białe. Trzon cienki, bez pierścienia...</p>
-                        <div class="topic-footer">
-                            <span>Ostatni post: 15.06.2025, 14:30</span>
-                            <a href="#">Przejdź do tematu</a>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <article class="section-card">
-                <div class="section-header">
-                    <h2><a href="#">Miejsca Grzybobrania</a></h2>
-                    <a href="#">Zobacz wszystkie</a>
-                </div>
-                <div class="section-content">
-                    <div class="latest-topic">
-                        <h3><a href="#">Grzybobranie w Puszczy Białowieskiej - udane!</a></h3>
-                        <p class="topic-meta">Autor: LeśnyWłóczęga | Data: 12.06.2025 | Komentarze: 15</p>
-                        <p class="topic-excerpt">Wczorajsze wyjście do lasu okazało się strzałem w dziesiątkę! Koszyk pełen prawdziwków i koźlarzy...</p>
-                        <div class="topic-footer">
-                            <span>Ostatni post: 13.06.2025, 09:10</span>
-                            <a href="#">Przejdź do tematu</a>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <article class="section-card">
-                <div class="section-header">
-                    <h2><a href="#">Przepisy z Grzybów</a></h2>
-                    <a href="#">Zobacz wszystkie</a>
-                </div>
-                <div class="section-content">
-                    <div class="latest-topic">
-                        <h3><a href="#">Pyszny sos borowikowy - mój przepis!</a></h3>
-                        <p class="topic-meta">Autor: KulinarnyGrzybiarz | Data: 08.06.2025 | Komentarze: 22</p>
-                        <p class="topic-excerpt">Dzielę się sprawdzonym przepisem na sos borowikowy, który idealnie pasuje do makaronu i mięs...</p>
-                        <div class="topic-footer">
-                            <span>Ostatni post: 10.06.2025, 18:45</span>
-                            <a href="#">Przejdź do tematu</a>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
-            <article class="section-card">
-                <div class="section-header">
-                    <h2><a href="#">Suszenie i Przechowywanie</a></h2>
-                    <a href="#">Zobacz wszystkie</a>
-                </div>
-                <div class="section-content">
-                    <div class="latest-topic">
-                        <h3><a href="#">Szybkie sposoby na suszenie grzybów</a></h3>
-                        <p class="topic-meta">Autor: GospodarzLasu | Data: 05.06.2025 | Komentarze: 11</p>
-                        <p class="topic-excerpt">Zbliża się sezon, więc warto przypomnieć sobie najlepsze metody suszenia grzybów. Ja polecam suszarki...</p>
-                        <div class="topic-footer">
-                            <span>Ostatni post: 07.06.2025, 11:00</span>
-                            <a href="#">Przejdź do tematu</a>
-                        </div>
-                    </div>
-                </div>
-            </article>
-
         </section>
     </div>
 

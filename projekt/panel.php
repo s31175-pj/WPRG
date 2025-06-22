@@ -1,3 +1,8 @@
+<?php
+include 'php.php';
+include 'session_util.php';
+?>
+
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -11,22 +16,33 @@
     <header>
         <div class="header-content">
             <div class="logo">
-                <h1><a href="index.html">Forum Grzybiarzy</a></h1>
+                <h1><a href="index.php">Forum Grzybiarzy</a></h1>
             </div>
             <nav>
                 <ul>
-                    <li><a href="index.html">Strona Główna</a></li>
-                    <li><a href="#">Działy Forum</a></li>
+                    <li><a href="index.php">Strona Główna</a></li>
+                    <li><a href="index.php">Działy Forum</a></li>
                     <li><a href="#">Galerie Grzybów</a></li>
                     <li><a href="#">Wyszukiwarka</a></li>
                     <li><a href="#">Kontakt</a></li>
                 </ul>
             </nav>
             <div class="user-status">
-                <span>Witaj, **GrzybowyUser**!</span>
-                <a href="user_panel.html">Mój Profil</a>
-                <span>|</span>
-                <a href="#">Wyloguj</a>
+                <?php
+                        if(session_status()!=2) {
+                            echo "<span>Witaj Gościu</span>";
+                            echo "<a href='auth.php'>Zaloguj się</a>";
+                            echo "<span>|</span>";
+                            echo "<a href='auth.php'>Zarejestruj się</a>";
+                        }
+                        else 
+                        {
+                            echo "<span>Witaj $user[1]</span>";
+                            echo "<a href='panel.php'>Mój Profil</a>";
+                            echo "<span>|</span>";
+                            echo "<a href='index.php?logout=true'>Wyloguj</a>";
+                        }
+                    ?>
             </div>
         </div>
     </header>

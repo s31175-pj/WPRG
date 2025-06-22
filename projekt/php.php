@@ -1,4 +1,5 @@
 <?php
+
     function redirect($url_docelowy)
     {
         echo '<form id="przekierowanie" method="post" action="' . htmlspecialchars($url_docelowy) . '">';
@@ -8,25 +9,18 @@
         exit();
     }
 
-    function connect_db($db, $db_user, $db_pass, $db_name, $db_query)
+    function connect_db($query, $type, ...$args)
     {
-        if (!$db_lnk = mysqli_connect($db, $db_user, $db_pass))
-        {
-            exit('Nie udało się połączyć z serwerem MySQL...<br/>');
+
+        $conn = new mysqli("localhost", "root", "", "shroomforum");
+
+        if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
         }
 
-        if(!mysqli_select_db($db_lnk, $db_name))
-        {
-            echo 'Nie udało się wybrać bazy: shroomforum<br/>';
-            exit;
-        }
+        $stmt = $conn->prepare($query);
+        $stmt->bind_param($type, ...$args);
 
-        if(!$result = mysqli_query($db_lnk, $db_query))
-        {
-            mysqli_close($db_lnk);
-            echo 'Nieprawidłowe zapytanie';
-            exit;
-        }
-        return $result;
+        return $stmt;
     }
 ?>

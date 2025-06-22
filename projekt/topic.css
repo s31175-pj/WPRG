@@ -1,0 +1,483 @@
+:root {
+            --primary-color: #5C8C56; /* Głęboka zieleń lasu */
+            --secondary-color: #8DBC86; /* Jaśniejsza zieleń, do akcentów */
+            --accent-color: #F7B844; /* Ciepły pomarańczowo-żółty, akcent */
+            --text-color: #333;
+            --light-text-color: #555;
+            --background-color: #EBF2EB; /* Bardzo jasna zieleń/szarość */
+            --card-background: #ffffff;
+            --border-color: #dbe2db;
+            --shadow-light: rgba(0, 0, 0, 0.08);
+            --shadow-medium: rgba(0, 0, 0, 0.12);
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            flex-grow: 1;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 10px var(--shadow-medium);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo h1 {
+            margin: 0;
+            font-size: 2.5em;
+            font-family: 'Merriweather', serif;
+            font-weight: 700;
+        }
+
+        .logo h1 a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .logo h1 a:hover {
+            color: var(--accent-color);
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        nav ul li {
+            margin-left: 30px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1em;
+            position: relative;
+            padding-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+
+        nav ul li a:hover {
+            color: var(--accent-color);
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+
+        .user-status {
+            font-size: 0.95em;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-status span {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .user-status a {
+            color: var(--accent-color);
+            text-decoration: none;
+            font-weight: 700;
+            transition: text-decoration 0.3s ease;
+        }
+
+        .user-status a:hover {
+            text-decoration: underline;
+        }
+
+        /* Ogólne style dla kart, które będą używane również tutaj */
+        .card {
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 6px 15px var(--shadow-light);
+            border: 1px solid var(--border-color);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        /* Breadcrumbs - ścieżka nawigacyjna */
+        .breadcrumbs {
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: var(--light-text-color);
+        }
+
+        .breadcrumbs a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 700;
+            transition: text-decoration 0.3s ease;
+        }
+
+        .breadcrumbs a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumbs span {
+            margin: 0 5px;
+        }
+
+        /* Główny post (Temat) */
+        .topic-post {
+            /* dziedziczy z .card */
+            padding: 35px;
+        }
+
+        .topic-title {
+            color: var(--primary-color);
+            font-size: 2.5em;
+            font-family: 'Merriweather', serif;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        .topic-meta {
+            font-size: 0.95em;
+            color: var(--light-text-color);
+            margin-bottom: 25px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 20px;
+            align-items: center;
+        }
+
+        .topic-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .topic-meta strong {
+            color: var(--text-color);
+        }
+
+        .topic-content {
+            font-size: 1.1em;
+            line-height: 1.7;
+            color: var(--text-color);
+            margin-bottom: 30px;
+        }
+
+        .topic-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-top: 15px;
+            box-shadow: 0 4px 10px var(--shadow-light);
+        }
+
+        .post-footer {
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+            color: var(--light-text-color);
+        }
+
+        .post-footer .actions a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 700;
+            margin-left: 15px;
+            transition: color 0.3s ease;
+        }
+
+        .post-footer .actions a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        /* Sekcja komentarzy */
+        .comments-section {
+            margin-top: 40px;
+        }
+
+        .comments-section h2 {
+            font-size: 2em;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            font-family: 'Merriweather', serif;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        .comment-card {
+            /* dziedziczy z .card */
+            margin-bottom: 20px; /* Odstęp między komentarzami */
+            padding: 25px;
+            position: relative; /* Dla linii odpowiedzi */
+        }
+
+        .comment-card.reply {
+            margin-left: 50px; /* Wcięcie dla odpowiedzi */
+            border-left: 3px solid var(--secondary-color); /* Linia dla odpowiedzi */
+            padding-left: 20px;
+        }
+        .comment-card.reply::before {
+            content: '';
+            position: absolute;
+            left: 20px; /* Dopasuj do paddingu i border-left */
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background-color: var(--secondary-color);
+            z-index: -1; /* Aby było pod treścią */
+        }
+
+
+        .comment-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .comment-author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--secondary-color);
+            flex-shrink: 0;
+        }
+
+        .comment-author-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .comment-info {
+            line-height: 1.3;
+        }
+
+        .comment-author {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 1.1em;
+            text-decoration: none;
+            transition: text-decoration 0.3s ease;
+        }
+
+        .comment-author:hover {
+            text-decoration: underline;
+        }
+
+        .comment-date {
+            font-size: 0.85em;
+            color: var(--light-text-color);
+        }
+
+        .comment-content {
+            font-size: 1em;
+            line-height: 1.6;
+            color: var(--text-color);
+            margin-bottom: 15px;
+        }
+
+        .comment-actions {
+            text-align: right;
+            font-size: 0.9em;
+        }
+
+        .comment-actions a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 700;
+            margin-left: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .comment-actions a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
+        }
+
+        /* Formularz dodawania komentarza */
+        .add-comment-form {
+            /* dziedziczy z .card */
+            margin-top: 40px;
+            padding: 30px;
+        }
+
+        .add-comment-form h3 {
+            color: var(--primary-color);
+            font-size: 1.8em;
+            font-family: 'Merriweather', serif;
+            margin-top: 0;
+            margin-bottom: 25px;
+        }
+
+        .form-group textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 700;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 60px;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 0.9em;
+            box-shadow: 0 -4px 10px var(--shadow-medium);
+        }
+
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+            transition: text-decoration 0.3s ease;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsywność */
+        @media (max-width: 767px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .logo {
+                margin-bottom: 15px;
+            }
+
+            nav ul {
+                flex-direction: column;
+                gap: 10px;
+                margin-bottom: 15px;
+            }
+
+            nav ul li {
+                margin-left: 0;
+            }
+
+            nav ul li a::after {
+                display: none;
+            }
+
+            .user-status {
+                margin-top: 10px;
+                justify-content: center;
+            }
+
+            .topic-title {
+                font-size: 1.8em;
+            }
+
+            .topic-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+
+            .post-footer {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .post-footer .actions {
+                width: 100%;
+                text-align: left;
+                margin-left: 0;
+            }
+            .post-footer .actions a {
+                margin-left: 0;
+                margin-right: 15px; /* Dodaj trochę odstępu między przyciskami */
+            }
+
+            .comments-section h2, .add-comment-form h3 {
+                font-size: 1.5em;
+            }
+
+            .comment-card {
+                padding: 15px;
+            }
+
+            .comment-card.reply {
+                margin-left: 20px; /* Mniejsze wcięcie dla odpowiedzi */
+                padding-left: 10px;
+            }
+            .comment-card.reply::before {
+                left: 10px;
+            }
+
+            .comment-author-avatar {
+                width: 40px;
+                height: 40px;
+            }
+
+            .comment-info {
+                font-size: 0.9em;
+            }
+
+            .comment-content {
+                font-size: 0.95em;
+            }
+        }
